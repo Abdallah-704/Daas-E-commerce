@@ -1,0 +1,140 @@
+:root {
+  /* Theme colors will be set by ThemeContext */
+  --primary: #1e1e1e;
+  --secondary: #2d2d2d;
+  --background: #121212;
+  --surface: #1e1e1e;
+  --text: #ffffff;
+  --text-secondary: #b0b0b0;
+  --border: #404040;
+  --card: #1e1e1e;
+  --input: #2d2d2d;
+  --button: #2196f3;
+  --buttonHover: #1976d2;
+  --link: #64b5f6;
+  --linkHover: #42a5f5;
+  --table-header: #2d2d2d;
+  --table-hover: #2d2d2d;
+  --error: #ff5252;
+  --success: #4caf50;
+  --warning: #ffc107;
+  --info: #2196f3;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--text);
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: all 0.3s ease;
+}
+
+/* Card styles */
+.card {
+  background-color: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+  margin: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+/* Form styles */
+input,
+textarea,
+select {
+  background-color: var(--input);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 8px;
+  margin: 4px 0;
+  transition: all 0.3s ease;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: var(--button);
+  box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.2);
+}
+
+/* Button styles */
+button {
+  background-color: var(--button);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+button:hover {
+  background-color: var(--buttonHover);
+  transform: translateY(-1px);
+}
+
+/* Link styles */
+a {
+  color: var(--link);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: var(--linkHover);
+}
+
+/* Table styles */
+table {
+  background-color: var(--surface);
+  color: var(--text);
+  border-collapse: collapse;
+  width: 100%;
+  transition: all 0.3s ease;
+}
+
+th {
+  background-color: var(--table-header);
+  color: var(--text);
+  padding: 12px;
+  text-align: left;
+  font-weight: 600;
+}
+
+td {
+  padding: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+tr:hover {
+  background-color: var(--table-hover);
+}
+
+/* Scrollbar styles */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-secondary);
+}

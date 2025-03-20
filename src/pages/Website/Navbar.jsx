@@ -140,48 +140,49 @@ const Navbar = () => {
       </div>
 
       {/* قسم التصنيفات */}
-      <Container
-        isSmallDevice={isSmallDevice}
-        isMediumDevice={isMediumDevice}
-        className="row"
-        style={{
-          backgroundColor: "white",
-          display: "flex",
-          alignItems: "center",
-          flexWrap: "wrap",
-        }}>
-        <div className="col-12">
-          <div style={{
-            padding: isSmallDevice ? "2px" : "5px",
-            display: "flex",
-            flexWrap: "wrap",
-            gap: "10px"
-          }}>
-            <Link style={{
-              color: "black"
-            }} to="/categories" className="me-4">Show all</Link>
-            {loading
-              ? [...Array(10)].map((_, index) => (
-                <Skeleton
-                  key={index}
-                  width={80}
-                  height={20}
-                  style={{ display: "inline-block" }}
-                />
-              ))
-              : memoizedCategories.map((category) => (
-                <Link
-                  className="me-3 text-black"
-                  style={{ padding: "0px" }}
-                  key={category.id}
-                  to={`/category/${category.id}`}
-                >
-                  {category.title}
-                </Link>
-              ))}
+      <div className="row" style={{
+        backgroundColor: "white",
+        display: "flex",
+        alignItems: "center",
+        flexWrap: "wrap",
+      }}>
+        <Container
+          isSmallDevice={isSmallDevice}
+          isMediumDevice={isMediumDevice}
+        >
+          <div className="col-12">
+            <div style={{
+              padding: isSmallDevice ? "2px" : "5px",
+              display: "flex",
+              flexWrap: "wrap",
+              gap: "10px"
+            }}>
+              <Link style={{
+                color: "black"
+              }} to="/categories" className="me-4">Show all</Link>
+              {loading
+                ? [...Array(10)].map((_, index) => (
+                  <Skeleton
+                    key={index}
+                    width={80}
+                    height={20}
+                    style={{ display: "inline-block" }}
+                  />
+                ))
+                : memoizedCategories.map((category) => (
+                  <Link
+                    className="me-3 text-black"
+                    style={{ padding: "0px" }}
+                    key={category.id}
+                    to={`/category/${category.id}`}
+                  >
+                    {category.title}
+                  </Link>
+                ))}
+            </div>
           </div>
-        </div>
-      </Container>
+        </Container>
+      </div>
     </>
   );
 };

@@ -1,5 +1,8 @@
 import styled from 'styled-components';
 
+// Helper function to filter out custom props that shouldn't go to the DOM
+const shouldForwardProp = (prop) => !['isSmallDevice', 'isMediumDevice', 'isValidService'].includes(prop);
+
 export const MainTitle = styled.h2`
     font-weight: bold;
     text-shadow: ${props => props.theme.isDark ? 'none' : '1px 1px 0px'};
@@ -37,7 +40,9 @@ export const MainTitle = styled.h2`
     }
 `;
 
-export const Section = styled.div`
+export const Section = styled.div.withConfig({
+    shouldForwardProp
+})`
     width: 48%;
     background-color: ${props => props.theme?.colors?.background || '#f5f5f5'};
     padding: 20px;
@@ -49,7 +54,9 @@ export const Section = styled.div`
     }
 `;
 
-export const ProductGrid = styled.div`
+export const ProductGrid = styled.div.withConfig({
+    shouldForwardProp
+})`
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 20px;
@@ -74,7 +81,9 @@ export const Button = styled.button`
     }
 `;
 
-export const SectionWrapper = styled.div`
+export const SectionWrapper = styled.div.withConfig({
+    shouldForwardProp
+})`
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;

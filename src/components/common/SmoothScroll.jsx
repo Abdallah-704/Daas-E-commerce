@@ -10,7 +10,6 @@ const SmoothScroll = ({ children }) => {
             behavior: 'smooth'
         });
     }, [location.pathname]);
-
     return children;
 };
 

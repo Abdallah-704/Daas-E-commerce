@@ -1,6 +1,11 @@
 import styled from "styled-components";
 
-export const Background = styled.div`
+// Helper function to filter out custom props that shouldn't go to the DOM
+const shouldForwardProp = (prop) => !['isSmallDevice', 'isMediumDevice', 'isValidService'].includes(prop);
+
+export const Background = styled.div.withConfig({
+  shouldForwardProp
+})`
   position: fixed;
   width: 100vw;
   height: 100vh;
@@ -105,12 +110,16 @@ export const Background = styled.div`
   }
 `;
 
-export const StyledCotnaienr = styled.div`
+export const StyledCotnaienr = styled.div.withConfig({
+  shouldForwardProp
+})`
     padding: 0px 20px 0px 20px;
     margin: 0 auto 0 auto;
 `;
 
-export const StyledRegister = styled.div`
+export const StyledRegister = styled.div.withConfig({
+  shouldForwardProp
+})`
     display: flex;
     align-items: center;
     justify-content: center;
@@ -215,7 +224,9 @@ label {
     }
 `;
 
-export const StyledForm = styled.div`
+export const StyledForm = styled.div.withConfig({
+  shouldForwardProp
+})`
     background-color: white;
     text-align: center;
     width: 100%;
@@ -228,12 +239,16 @@ export const StyledForm = styled.div`
     isSmallDevice ? "400px" : isMediumDevice ? "500px" : "500px"};
 `;
 
-export const StyledcontainerInputs = styled.div`
+export const StyledcontainerInputs = styled.div.withConfig({
+  shouldForwardProp
+})`
     width: ${({ isSmallDevice, isMediumDevice }) =>
     isSmallDevice ? "100%" : isMediumDevice ? "100%" : "100%"};
 `;
 
-export const StyledInput = styled.div`
+export const StyledInput = styled.div.withConfig({
+  shouldForwardProp
+})`
 position: relative;
 margin-bottom: 33px;
 width: 100%;

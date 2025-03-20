@@ -1,6 +1,11 @@
 import styled from "styled-components"
 
-export const StyledHome = styled.div`
+// Helper function to filter out custom props that shouldn't go to the DOM
+const shouldForwardProp = (prop) => !['isSmallDevice', 'isMediumDevice', 'isValidService'].includes(prop);
+
+export const StyledHome = styled.div.withConfig({
+    shouldForwardProp
+})`
 overflow: hidden;
 margin-bottom: 30px;
 img{

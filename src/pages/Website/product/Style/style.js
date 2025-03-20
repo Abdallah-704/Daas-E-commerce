@@ -1,8 +1,13 @@
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 
+// Helper function to filter out custom props that shouldn't go to the DOM
+const shouldForwardProp = (prop) => !['isSmallDevice', 'isMediumDevice', 'isValidService', 'toprated', 'latestsale', 'latest'].includes(prop);
+
 // Main product card container
-export const ProductCard = styled.div`
+export const ProductCard = styled.div.withConfig({
+  shouldForwardProp
+})`
   overflow: hidden;
   padding: 0 0 10px 10px;
   border-radius: 10px;
@@ -27,7 +32,9 @@ export const SaleBadge = styled.span`
 `;
 
 // Container for the product image
-export const ImageContainer = styled.div`
+export const ImageContainer = styled.div.withConfig({
+  shouldForwardProp
+})`
   width: ${({ latest, isSmallDevice }) =>
     latest ? (isSmallDevice ? "120px" : "160px") : "160px"};
   height: 160px;
@@ -65,7 +72,9 @@ export const Price = styled.p`
 `;
 
 // Container for star rating
-export const StarsContainer = styled.div`
+export const StarsContainer = styled.div.withConfig({
+  shouldForwardProp
+})`
   display: flex;
   font-size: 20px;
   margin-bottom: 10px;
@@ -84,7 +93,9 @@ export const AddToCartButton = styled(Link)`
 `;
 
 // Container for stars and Add to Cart button
-export const BottomContainer = styled.div`
+export const BottomContainer = styled.div.withConfig({
+  shouldForwardProp
+})`
   display: flex;
   flex-direction: column;
   margin-top: auto;

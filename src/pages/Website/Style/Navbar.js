@@ -1,5 +1,11 @@
 import styled from "styled-components";
-export const Container = styled.div`
+
+// Helper function to filter out custom props that shouldn't go to the DOM
+const shouldForwardProp = (prop) => !['isSmallDevice', 'isMediumDevice', 'isValidService'].includes(prop);
+
+export const Container = styled.div.withConfig({
+  shouldForwardProp
+})`
   margin:0 auto;
   padding: 0 ${({ isSmallDevice, isMediumDevice }) =>
     isSmallDevice ? "20px" : isMediumDevice ? "40px" : "60px"};
@@ -31,7 +37,9 @@ export const Container = styled.div`
     }
 `;
 
-export const Icons = styled.div`
+export const Icons = styled.div.withConfig({
+  shouldForwardProp
+})`
   display: flex;
   gap: 15px;
   flex:1;
@@ -69,7 +77,9 @@ export const Icons = styled.div`
   }
 `;
 
-export const AuthIcon = styled.div`
+export const AuthIcon = styled.div.withConfig({
+  shouldForwardProp
+})`
   cursor: pointer;
   position: relative;
   display: flex;
@@ -107,7 +117,9 @@ export const AuthIcon = styled.div`
   }
 `;
 
-export const SearchContainer = styled.div`
+export const SearchContainer = styled.div.withConfig({
+  shouldForwardProp
+})`
   position: relative;
   flex: 1;
   width: 100%;

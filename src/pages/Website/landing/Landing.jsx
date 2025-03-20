@@ -54,18 +54,20 @@ const Landing = () => {
                 <div className="swiper-button-next"></div>
                 <div className="swiper-button-prev"></div>
             </div>
-            <style jsx>{`
-                .swiper-pagination-bullet {
-                    background-color: #fff; /* لون النقاط */
-                }
-                .swiper-button-prev, .swiper-rtl .swiper-button-next{
-                    top: 55%;
-                    color:white
-                }
-                .swiper-button-next, .swiper-rtl .swiper-button-prev{
-                    top: 55%;
-                }
-            `}</style>
+            <style>
+                {`
+                    .swiper-pagination-bullet {
+                        background-color: #fff; /* لون النقاط */
+                    }
+                    .swiper-button-prev, .swiper-rtl .swiper-button-next{
+                        top: 55%;
+                        color:white
+                    }
+                    .swiper-button-next, .swiper-rtl .swiper-button-prev{
+                        top: 55%;
+                    }
+                `}
+            </style>
         </StyledHome>
     );
 }

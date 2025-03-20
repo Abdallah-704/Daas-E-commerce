@@ -6,7 +6,7 @@ import { IoPersonCircleOutline, IoSearchSharp } from "react-icons/io5";
 import { FiShoppingCart } from "react-icons/fi";
 import { Container, Icons, SearchContainer, AuthIcon } from "./Style/Navbar";
 import { useMediaQuery } from "@uidotdev/usehooks";
-import logo from "../../images/logo.png";
+import logo from "../../images/daas-logo.svg";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { MdFavoriteBorder } from "react-icons/md";

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Simplified Color Scheme -->
+  <defs>
+    <linearGradient id="primaryGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2196F3" />
+      <stop offset="100%" stop-color="#0D47A1" />
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="1" stdDeviation="2" flood-color="#000000" flood-opacity="0.15"/>
+    </filter>
+  </defs>
+  
+  <!-- Base Circle -->
+  <circle cx="100" cy="100" r="95" fill="url(#primaryGradient)" filter="url(#shadow)" />
+  <circle cx="100" cy="100" r="85" fill="#212121" />
+  
+  <!-- Letter D -->
+  <path d="M42 60C42 55.5817 45.5817 52 50 52H70C89.8823 52 106 68.1177 106 88V112C106 131.882 89.8823 148 70 148H50C45.5817 148 42 144.418 42 140V60Z" fill="white" filter="url(#shadow)"/>
+  <path d="M57 76H70C80.4934 76 89 84.5066 89 95V105C89 115.493 80.4934 124 70 124H57V76Z" fill="#2196F3"/>
+  
+  <!-- A Letter -->
+  <path d="M115 100L125 70H135L145 100H135L133 93H127L125 100H115Z" fill="white" filter="url(#shadow)"/>
+  <path d="M128 86L130 78L132 86H128Z" fill="#2196F3"/>
+  
+  <!-- Shopping Cart Icon - Simplified -->
+  <g filter="url(#shadow)">
+    <path d="M156 52C154.895 52 154 52.8954 154 54V56H150C149.209 56 148.534 56.487 148.288 57.231L138.295 88.231C138.102 88.809 138.212 89.444 138.586 89.914C138.961 90.384 139.555 90.646 140.166 90.583L160.166 88.583C160.956 88.5 161.62 87.93 161.868 87.159L167.868 69.159C168.043 68.612 167.992 68.014 167.724 67.505C167.455 66.996 166.996 66.621 166.449 66.447L152.449 62.447C152.148 62.341 151.83 62.317 151.521 62.378C151.756 61.584 152.419 61 153.25 61H168C169.105 61 170 60.1046 170 59C170 57.8954 169.105 57 168 57H153.25C150.799 57 148.704 58.7641 148.164 61.105L146 60.553V54C146 52.8954 145.105 52 144 52H156Z" fill="white"/>
+    <path d="M145 94C142.791 94 141 95.7909 141 98C141 100.209 142.791 102 145 102C147.209 102 149 100.209 149 98C149 95.7909 147.209 94 145 94Z" fill="#2196F3"/>
+    <path d="M157 94C154.791 94 153 95.7909 153 98C153 100.209 154.791 102 157 102C159.209 102 161 100.209 161 98C161 95.7909 159.209 94 157 94Z" fill="#2196F3"/>
+  </g>
+  
+  <!-- "S" letter in Daas -->
+  <path d="M175 85C175 78 171 74 165 74C159 74 155 78 155 84C155 90 159 92 165 92C169 92 171 94 171 97C171 100 169 102 165 102C161 102 159 100 159 97H155C155 104 159 106 165 106C171 106 175 102 175 97C175 92 171 90 165 90C161 90 159 88 159 84C159 80 161 78 165 78C169 78 171 80 171 85H175Z" fill="white" filter="url(#shadow)"/>
+  
+  <!-- Tagline -->
+  <text x="100" y="128" fill="white" font-family="Arial, sans-serif" font-size="12" font-weight="bold" text-anchor="middle">E-COMMERCE</text>
+</svg> 

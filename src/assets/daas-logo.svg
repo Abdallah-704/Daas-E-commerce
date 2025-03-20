@@ -1,33 +1,33 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg width="300" height="120" viewBox="0 0 300 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <!-- Simple Color Scheme -->
+<svg width="300" height="300" viewBox="0 0 300 300" fill="none" xmlns="http://www.w3.org/2000/svg">
   <defs>
     <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
-      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.15"/>
+      <feDropShadow dx="2" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.1"/>
     </filter>
   </defs>
-  
-  <!-- Daas Text - Bigger and Bolder -->
-  <g filter="url(#shadow)" transform="translate(40, 10) scale(1.4)">
-    <!-- D -->
-    <path d="M30 20H50C62 20 72 30 72 42V58C72 70 62 80 50 80H30V20Z" fill="#131921"/>
-    <path d="M40 35H50C54 35 57 38 57 42V58C57 62 54 65 50 65H40V35Z" fill="white"/>
 
-    <!-- A -->
-    <path d="M82 80L95 20H110L123 80H108L106 70H99L97 80H82Z" fill="#131921"/>
-    <path d="M101 55L103 40L105 55H101Z" fill="white"/>
+  <!-- Shopping Bag -->
+  <g filter="url(#shadow)" transform="translate(50, 40)">
+    <!-- Speed Lines -->
+    <path d="M0 70h40" stroke="#1a237e" stroke-width="8" stroke-linecap="round"/>
+    <path d="M0 90h30" stroke="#1a237e" stroke-width="8" stroke-linecap="round"/>
+    <path d="M0 110h20" stroke="#1a237e" stroke-width="8" stroke-linecap="round"/>
 
-    <!-- A2 -->
-    <path d="M133 80L146 20H161L174 80H159L157 70H150L148 80H133Z" fill="#131921"/>
-    <path d="M152 55L154 40L156 55H152Z" fill="white"/>
-
-    <!-- S -->
-    <path d="M184 42C184 36 188 30 196 30C204 30 208 36 208 42H196C196 39 194 38 196 38C198 38 198 39 198 42C198 45 196 46 196 46C190 46 188 49 188 55C188 61 192 67 196 67C204 67 208 61 208 55H196C196 58 194 59 196 59C198 59 198 58 198 55C198 52 196 51 196 51C190 51 184 48 184 42Z" fill="#131921"/>
+    <!-- Bag -->
+    <path d="M40 40h160v160c0 11-9 20-20 20h-120c-11 0-20-9-20-20v-160z" fill="#ffd600"/>
+    <path d="M80 40v-20c0-11 9-20 20-20h40c11 0 20 9 20 20v20" stroke="#1a237e" stroke-width="12" fill="none" stroke-linecap="round"/>
+    
+    <!-- Smile -->
+    <path d="M90 100q40 40 80 0" stroke="#1a237e" stroke-width="8" stroke-linecap="round" fill="none"/>
+    
+    <!-- Eyes -->
+    <circle cx="100" cy="80" r="8" fill="#1a237e"/>
+    <circle cx="160" cy="80" r="8" fill="#1a237e"/>
   </g>
-  
-  <!-- Smile/Arrow - Bigger -->
-  <path d="M60 95C105 125 195 125 240 95" stroke="#FF9900" stroke-width="8" stroke-linecap="round"/>
-  
-  <!-- E-Commerce Tagline - Bigger -->
-  <text x="150" y="110" fill="#131921" font-family="Arial, sans-serif" font-size="16" font-weight="bold" text-anchor="middle">E-COMMERCE</text>
+
+  <!-- Daas Text -->
+  <g transform="translate(50, 240)">
+    <text x="100" y="0" font-family="Arial Black, sans-serif" font-size="48" font-weight="900" fill="#1a237e" text-anchor="middle">Daas</text>
+    <text x="100" y="30" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#1a237e" text-anchor="middle">ONLINE SHOPPING</text>
+  </g>
 </svg> 

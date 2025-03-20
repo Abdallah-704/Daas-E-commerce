@@ -12,8 +12,19 @@ export const AuthProvider = ({ children }) => {
         // Check if user is logged in (e.g., check localStorage or session)
         const checkAuth = () => {
             const storedUser = localStorage.getItem('user');
+            console.log("Checking auth, stored user:", storedUser);
             if (storedUser) {
-                setUser(JSON.parse(storedUser));
+                try {
+                    const parsedUser = JSON.parse(storedUser);
+                    console.log("User found in localStorage:", parsedUser);
+                    setUser(parsedUser);
+                } catch (error) {
+                    console.error("Error parsing user from localStorage:", error);
+                    // If there's an error parsing, clear the corrupted data
+                    localStorage.removeItem('user');
+                }
+            } else {
+                console.log("No user found in localStorage");
             }
             setLoading(false);
         };
@@ -22,12 +33,14 @@ export const AuthProvider = ({ children }) => {
     }, []);
 
     const login = (userData) => {
+        console.log("Logging in user:", userData);
         setUser(userData);
         localStorage.setItem('user', JSON.stringify(userData));
         navigate('/dashboard');
     };
 
     const logout = () => {
+        console.log("Logging out user");
         setUser(null);
         localStorage.removeItem('user');
         navigate('/login');

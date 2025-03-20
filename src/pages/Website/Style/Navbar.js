@@ -51,25 +51,59 @@ export const Icons = styled.div`
       transform: translateY(-2px);
     }
     
-    &:last-child {
-      position: relative;
-      
-      &:hover::after {
-        content: attr(data-tooltip);
-        position: absolute;
-        bottom: -25px;
-        left: 50%;
-        transform: translateX(-50%);
-        background-color: ${props => props.theme?.colors?.cardBackground || '#ffffff'};
-        color: ${props => props.theme?.colors?.text || '#333333'};
-        padding: 4px 8px;
-        border-radius: 4px;
-        font-size: 12px;
-        white-space: nowrap;
-        box-shadow: 0 2px 5px ${props => props.theme?.colors?.shadow || 'rgba(0,0,0,0.2)'};
-        z-index: 10;
-      }
+    &[data-tooltip]:hover::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      bottom: -25px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: ${props => props.theme?.colors?.cardBackground || '#ffffff'};
+      color: ${props => props.theme?.colors?.text || '#333333'};
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      white-space: nowrap;
+      box-shadow: 0 2px 5px ${props => props.theme?.colors?.shadow || 'rgba(0,0,0,0.2)'};
+      z-index: 10;
     }
+  }
+`;
+
+export const AuthIcon = styled.div`
+  cursor: pointer;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: ${props => props.theme?.colors?.text || '#333333'};
+  transition: all 0.3s ease;
+  
+  &:hover {
+    color: ${props => props.theme?.colors?.primary || '#007bff'};
+    transform: translateY(-2px);
+  }
+  
+  .tooltip {
+    position: absolute;
+    bottom: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: ${props => props.theme?.colors?.cardBackground || '#ffffff'};
+    color: ${props => props.theme?.colors?.text || '#333333'};
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    box-shadow: 0 2px 5px ${props => props.theme?.colors?.shadow || 'rgba(0,0,0,0.2)'};
+    z-index: 10;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s, visibility 0.3s;
+  }
+  
+  &:hover .tooltip {
+    opacity: 1;
+    visibility: visible;
   }
 `;
 

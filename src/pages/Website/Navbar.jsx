@@ -4,7 +4,7 @@ import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { IoPersonCircleOutline, IoSearchSharp } from "react-icons/io5";
 import { FiShoppingCart } from "react-icons/fi";
-import { Container, Icons, SearchContainer } from "./Style/Navbar";
+import { Container, Icons, SearchContainer, AuthIcon } from "./Style/Navbar";
 import { useMediaQuery } from "@uidotdev/usehooks";
 import logo from "../../images/logo.png";
 import Skeleton from "react-loading-skeleton";
@@ -25,6 +25,7 @@ const Navbar = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    console.log("Current user state:", user); // Debug user state
     const fetchCategories = async () => {
       try {
         const response = await axios.get(`${api}/${api_catagories}`);
@@ -56,16 +57,18 @@ const Navbar = () => {
       }
     };
     fetchCategories();
-  }, []);
+  }, [user]);
 
   // Handle logout click
   const handleLogout = () => {
+    console.log("Logging out user");
     logout();
-    navigate('/');
+    // Don't navigate here, let the context handle it
   };
 
   // Handle login click
   const handleLogin = () => {
+    console.log("Redirecting to login page");
     navigate('/login');
   };
 
@@ -119,21 +122,15 @@ const Navbar = () => {
                     <MdFavoriteBorder size={26} />
                   </Link>
                   {user ? (
-                    <div
-                      onClick={handleLogout}
-                      style={{ cursor: 'pointer' }}
-                      data-tooltip="Logout"
-                    >
+                    <AuthIcon onClick={handleLogout}>
                       <FiLogOut size={26} />
-                    </div>
+                      <span className="tooltip">Logout</span>
+                    </AuthIcon>
                   ) : (
-                    <div
-                      onClick={handleLogin}
-                      style={{ cursor: 'pointer' }}
-                      data-tooltip="Login"
-                    >
+                    <AuthIcon onClick={handleLogin}>
                       <FiLogIn size={26} />
-                    </div>
+                      <span className="tooltip">Login</span>
+                    </AuthIcon>
                   )}
                 </Icons>
               </div>

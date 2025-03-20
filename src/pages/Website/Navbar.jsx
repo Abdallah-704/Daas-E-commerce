@@ -1,7 +1,7 @@
 import { useEffect, useState, useMemo } from "react";
 import { api, api_catagories } from "../../API/Api.js";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { IoPersonCircleOutline, IoSearchSharp } from "react-icons/io5";
 import { FiShoppingCart } from "react-icons/fi";
 import { Container, Icons, SearchContainer } from "./Style/Navbar";
@@ -10,6 +10,9 @@ import logo from "../../images/logo.png";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { MdFavoriteBorder } from "react-icons/md";
+import { useAuth } from "../../context/AuthContext";
+import { FiLogIn, FiLogOut } from "react-icons/fi";
+import { generateFallbackCategories } from "../../assets/fallback";
 
 const Navbar = () => {
   const isSmallDevice = useMediaQuery("only screen and (max-width: 768px)");
@@ -18,20 +21,53 @@ const Navbar = () => {
   );
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchCategories = async () => {
       try {
         const response = await axios.get(`${api}/${api_catagories}`);
-        setCategories(response.data.slice(-10, -4));
+        if (response.data && response.data.length > 0) {
+          // Use slice to get a subset of categories
+          setCategories(response.data.slice(0, 10));
+        } else {
+          // If API returns empty data, use fallbacks
+          console.log("API returned empty categories data, using fallbacks");
+          const fallbackData = generateFallbackCategories(10);
+          // Convert fallbacks to format expected by navbar
+          const formattedFallbacks = fallbackData.map((cat, index) => ({
+            id: `fallback-${index}`,
+            title: cat.name
+          }));
+          setCategories(formattedFallbacks);
+        }
       } catch (error) {
         console.error("Error fetching categories:", error);
+        // Use fallbacks on error
+        const fallbackData = generateFallbackCategories(10);
+        const formattedFallbacks = fallbackData.map((cat, index) => ({
+          id: `fallback-${index}`,
+          title: cat.name
+        }));
+        setCategories(formattedFallbacks);
       } finally {
         setLoading(false);
       }
     };
     fetchCategories();
   }, []);
+
+  // Handle logout click
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+  };
+
+  // Handle login click
+  const handleLogin = () => {
+    navigate('/login');
+  };
 
   // استخدام useMemo لمنع إعادة حساب التصنيفات عند كل رندر
   const memoizedCategories = useMemo(() => categories, [categories]);
@@ -82,6 +118,23 @@ const Navbar = () => {
                   <Link to="/favorite">
                     <MdFavoriteBorder size={26} />
                   </Link>
+                  {user ? (
+                    <div
+                      onClick={handleLogout}
+                      style={{ cursor: 'pointer' }}
+                      data-tooltip="Logout"
+                    >
+                      <FiLogOut size={26} />
+                    </div>
+                  ) : (
+                    <div
+                      onClick={handleLogin}
+                      style={{ cursor: 'pointer' }}
+                      data-tooltip="Login"
+                    >
+                      <FiLogIn size={26} />
+                    </div>
+                  )}
                 </Icons>
               </div>
             </div>

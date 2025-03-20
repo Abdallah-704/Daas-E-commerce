@@ -4,6 +4,7 @@ import { api, api_catagories } from "../../../API/Api";
 import { Container } from "../Style/Navbar";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+import { generateFallbackCategories } from "../../../assets/fallback";
 
 // Memoized Category Item Component (Prevents Unnecessary Re-renders)
 const CategoryItem = memo(({ image, name }) => (
@@ -13,7 +14,7 @@ const CategoryItem = memo(({ image, name }) => (
             alt={name}
             loading="lazy"
             style={styles.image} />
-        <p>{name}</p>
+        <p style={styles.itemName}>{name}</p>
     </div>
 ));
 
@@ -21,15 +22,26 @@ const Categories = () => {
     const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [useFallback, setUseFallback] = useState(false);
 
     useEffect(() => {
         const fetchCategories = async () => {
             try {
                 const response = await axios.get(`${api}/${api_catagories}`);
-                setCategories(response.data);
+                if (response.data && response.data.length > 0) {
+                    setCategories(response.data);
+                } else {
+                    // API returned empty data, use fallbacks
+                    console.log("API returned empty data, using fallbacks");
+                    setUseFallback(true);
+                    setCategories(generateFallbackCategories(10));
+                }
             } catch (error) {
                 console.error("Error fetching categories:", error);
-                setError("فشل تحميل التصنيفات، يرجى المحاولة لاحقًا.");
+                setError("Failed to load categories. Using placeholder data instead.");
+                // Use fallback categories on error
+                setUseFallback(true);
+                setCategories(generateFallbackCategories(10));
             } finally {
                 setLoading(false);
             }
@@ -37,27 +49,29 @@ const Categories = () => {
         fetchCategories();
     }, []);
 
-    // تحديد عدد السكليتون بناءً على التصنيفات المحملة أو 50 كحد أدنى
-    const skeletonCount = categories.length > 0 ? categories.length : 50;
+    // Determine the number of skeleton placeholders to show
+    const skeletonCount = categories.length > 0 ? categories.length : 10;
 
     return (
         <Container>
-            {error ? (
-                <p style={styles.errorText}>{error}</p>
-            ) : (
-                <div style={styles.gridContainer}>
-                    {loading
-                        ? [...Array(skeletonCount)].map((_, index) => (
-                            <div key={index} style={styles.itemContainer}>
-                                <Skeleton height={100} width={200} />
-                                <Skeleton width={200} style={{ marginTop: 10 }} />
-                            </div>
-                        ))
-                        : categories.map((item, index) => (
-                            <CategoryItem key={index} image={item.image} name={item.name} />
-                        ))}
-                </div>
-            )}
+            {error && <p style={styles.message}>{error}</p>}
+
+            <div style={styles.gridContainer}>
+                {loading
+                    ? [...Array(skeletonCount)].map((_, index) => (
+                        <div key={index} style={styles.itemContainer}>
+                            <Skeleton height={200} width={250} style={styles.skeletonImage} />
+                            <Skeleton width={150} style={styles.skeletonText} />
+                        </div>
+                    ))
+                    : categories.map((item, index) => (
+                        <CategoryItem
+                            key={useFallback ? `fallback-${index}` : item.id}
+                            image={item.image}
+                            name={item.name}
+                        />
+                    ))}
+            </div>
         </Container>
     );
 };
@@ -69,22 +83,50 @@ const styles = {
     gridContainer: {
         display: "grid",
         gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))",
-        gap: "20px",
+        gap: "30px",
         justifyContent: "center",
         alignItems: "center",
         marginTop: "20px",
+        padding: "20px",
     },
     itemContainer: {
         textAlign: "center",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        transition: "transform 0.3s ease",
+        cursor: "pointer",
+        "&:hover": {
+            transform: "translateY(-10px)",
+        },
     },
     image: {
-        maxWidth: "100%",
-        height: "auto",
+        width: "100%",
+        height: "200px",
+        objectFit: "cover",
         borderRadius: "8px",
         boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+        transition: "transform 0.3s ease, box-shadow 0.3s ease",
+        "&:hover": {
+            transform: "scale(1.05)",
+            boxShadow: "0 6px 12px rgba(0, 0, 0, 0.15)",
+        },
     },
-    errorText: {
-        color: "red",
+    itemName: {
+        marginTop: "12px",
+        fontSize: "18px",
+        fontWeight: "600",
+    },
+    message: {
         textAlign: "center",
+        margin: "20px 0",
+        fontSize: "16px",
+    },
+    skeletonImage: {
+        borderRadius: "8px",
+        marginBottom: "10px",
+    },
+    skeletonText: {
+        marginTop: "10px",
     },
 };

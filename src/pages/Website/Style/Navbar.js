@@ -33,16 +33,42 @@ export const Container = styled.div`
 
 export const Icons = styled.div`
   display: flex;
-  gap: 12px;
+  gap: 15px;
   flex:1;
   align-items: center;
   justify-content: flex-end;
-  a{
-    margin-right:10px;
+  
+  a, div {
+    margin-right: 5px;
     color: ${props => props.theme?.colors?.text || '#333333'};
-    transition: color 0.3s ease;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
     &:hover {
       color: ${props => props.theme?.colors?.primary || '#007bff'};
+      transform: translateY(-2px);
+    }
+    
+    &:last-child {
+      position: relative;
+      
+      &:hover::after {
+        content: attr(data-tooltip);
+        position: absolute;
+        bottom: -25px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: ${props => props.theme?.colors?.cardBackground || '#ffffff'};
+        color: ${props => props.theme?.colors?.text || '#333333'};
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 12px;
+        white-space: nowrap;
+        box-shadow: 0 2px 5px ${props => props.theme?.colors?.shadow || 'rgba(0,0,0,0.2)'};
+        z-index: 10;
+      }
     }
   }
 `;

@@ -65,14 +65,13 @@ const Footer = () => {
                     <div style={styles.contactItem}>
                         <MdLocationOn style={styles.contactIcon} />
                         <p style={styles.contactText}>
-                            123 Commerce St, New York, NY 10001
+                            123 Commerce Syria, Homs
                         </p>
                     </div>
                     <div style={styles.contactItem}>
                         <MdPhone style={styles.contactIcon} />
                         <p style={styles.contactText}>
-                            +1 (555) 123-4567
-                        </p>
+                            0937330224                        </p>
                     </div>
                     <div style={styles.contactItem}>
                         <MdEmail style={styles.contactIcon} />

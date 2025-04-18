@@ -54,7 +54,7 @@ export const apiCacheSettings = {
 
 // Component optimization settings
 export const componentSettings = {
-    // Default list virtualization threshold
+    // Default list virtualization threshol
     defaultVirtualizationThreshold: 50,
 
     // Use React.memo for all components exported from a central location
@@ -71,6 +71,7 @@ export const componentSettings = {
 
     // Prioritize visible components' rendering
     prioritizeVisibleContent: true,
+    
 };
 
 // Bundle optimization settings

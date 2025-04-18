@@ -191,7 +191,7 @@ const ProductReviews = ({ reviews = [], rating, onAddReview }) => {
                             }}
                         >
                             {likedReviews[index] ? <MdThumbUp size={20} /> : <MdThumbUpOffAlt size={20} />}
-                            {review.likes || 0} Likes
+                            {review.likes||1 } Likes
                         </button>
                     </div>
                 ))}
@@ -200,4 +200,4 @@ const ProductReviews = ({ reviews = [], rating, onAddReview }) => {
     );
 };
 
-export default ProductReviews; 
+export default ProductReviews;

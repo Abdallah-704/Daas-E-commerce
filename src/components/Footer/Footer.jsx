@@ -1,7 +1,7 @@
 import React, { memo, useState, useMemo, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { useMediaQuery } from '@uidotdev/usehooks';
-import { FaFacebook, FaTwitter, FaInstagram, FaLinkedin, FaGithub } from 'react-icons/fa';
+import { FaFacebook, FaInstagram, FaLinkedin, FaGithub } from 'react-icons/fa';
 import { MdEmail, MdLocationOn, MdPhone } from 'react-icons/md';
 import { useTheme } from '../../context/ThemeContext';
 import { getFooterStyles, getFooterLinkStyles, getSocialIconStyles } from './FooterStyles';
@@ -20,11 +20,10 @@ const Footer = () => {
 
     const handleSubscribe = useCallback((e) => {
         e.preventDefault();
-        // Add subscription logic here
-        console.log('Subscribed with email:', email);
+        
         setEmail('');
         // Show a toast notification or success message
-    }, [email]);
+    }, []);
 
     const currentYear = new Date().getFullYear();
 
@@ -39,11 +38,11 @@ const Footer = () => {
                         enjoyable, and accessible to everyone.
                     </p>
                     <div style={styles.socialContainer}>
-                        <SocialIcon Icon={FaFacebook} url="https://facebook.com" />
-                        <SocialIcon Icon={FaTwitter} url="https://twitter.com" />
-                        <SocialIcon Icon={FaInstagram} url="https://instagram.com" />
-                        <SocialIcon Icon={FaLinkedin} url="https://linkedin.com" />
-                        <SocialIcon Icon={FaGithub} url="https://github.com" />
+                        <SocialIcon Icon={FaFacebook} url="https://www.facebook.com/qusai.ds" />
+
+                        <SocialIcon Icon={FaInstagram} url="https://www.instagram.com/abdalla_daas/" />
+                        <SocialIcon Icon={FaLinkedin} url="https://www.linkedin.com/in/abdallah-daas-947b98279?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" />
+                        <SocialIcon Icon={FaGithub} url="https://github.com/Abdallah-704" />
                     </div>
                 </div>
 
@@ -65,18 +64,19 @@ const Footer = () => {
                     <div style={styles.contactItem}>
                         <MdLocationOn style={styles.contactIcon} />
                         <p style={styles.contactText}>
-                            123 Commerce Syria, Homs
+                            Syria, Homs
                         </p>
                     </div>
                     <div style={styles.contactItem}>
                         <MdPhone style={styles.contactIcon} />
                         <p style={styles.contactText}>
-                            0937330224                        </p>
+                            0937330224
+                        </p>
                     </div>
                     <div style={styles.contactItem}>
                         <MdEmail style={styles.contactIcon} />
                         <p style={styles.contactText}>
-                            support@yourstore.com
+                            abdallahdaas18@gmail.com
                         </p>
                     </div>
                 </div>
@@ -143,7 +143,7 @@ const Footer = () => {
                         Shipping Policy
                     </Link>
                     <Link
-                        to="/refunds"
+                        to="/refund"
                         style={{
                             ...styles.link,
                             '&:hover': styles.linkHover
@@ -151,6 +151,25 @@ const Footer = () => {
                     >
                         Refund Policy
                     </Link>
+                    <Link
+                        to="/about"
+                        style={{
+                            ...styles.link,
+                            '&:hover': styles.linkHover
+                        }}
+                    >
+                        About Us
+                    </Link>
+                    <Link
+                        to="/contact"
+                        style={{
+                            ...styles.link,
+                            '&:hover': styles.linkHover
+                        }}
+                    >
+                        Contact Us
+                    </Link>
+
                 </div>
             </div>
         </footer>

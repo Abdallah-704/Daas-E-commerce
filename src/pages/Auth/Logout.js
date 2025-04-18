@@ -2,14 +2,15 @@ import { useNavigate } from 'react-router-dom';
 import { api_logout } from '../../API/Api'
 import { Axios } from '../../API/Axios'
 import Cookie from 'cookie-universal'
-const cookie=Cookie();
+const cookie = Cookie();
 const Logout = () => {
-    const nav=useNavigate();
-    const handlelogout=()=>{
+    const nav = useNavigate();
+    const handlelogout = () => {
         Axios.get(`/${api_logout}`
-        ).then(data=>{
+        ).then(data => {
             console.log(data)
             cookie.remove("Bearer")
+            cookie.remove("user")
             nav('/login')
         })
     }
@@ -17,5 +18,5 @@ const Logout = () => {
         <button onClick={handlelogout}>logout</button>
     );
 }
- 
+
 export default Logout;

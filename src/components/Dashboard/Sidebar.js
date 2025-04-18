@@ -32,6 +32,7 @@ const Sidebar = () => {
         setLoading(false);
       });
   }, []);
+
   const links = Links.map(
     (link, key) =>
       users &&
@@ -40,17 +41,13 @@ const Sidebar = () => {
           key={key}
           to={link.path}
           className={({ isActive }) =>
-            `d-flex align-items-center bar_link fs-6 ${isActive ? "active" : ""
-            }`
+            `d-flex align-items-center bar_link fs-6 ${isActive ? "active" : ""}`
           }
         >
-          <div >
+          <div className="icon-container">
             <FontAwesomeIcon icon={link.icon} />
           </div>
-          <p style={{
-            display: open ? "block" : "none",
-            margin: "0 10px"
-          }}>
+          <p className={`link-text ${!open ? 'hidden' : ''}`}>
             {link.name}
           </p>
         </NavLink>
@@ -61,23 +58,16 @@ const Sidebar = () => {
     <>
       {loading && <Loading />}
       <div
+        className="sidebar-overlay"
         style={{
-          width: "100%",
-          height: "100vh",
-          backgroundColor: "rgba(0, 0, 0, 0.64)",
-          top: "70px",
-          left: "0",
-          position: "fixed",
-          display: N_width_window < "768" && open ? "block" : "none",
+          display: N_width_window < 768 && open ? "block" : "none",
         }}
       ></div>
       <div
-        className="side_bar"
+        className={`side_bar ${open ? 'expanded' : 'collapsed'}`}
         style={{
-          left: N_width_window < "768" && !open ? "-100%" : 0,
-          width: open ? "250px" : "fit-content",
-          position: N_width_window < "768" ? "fixed" : "sticky",
-          transition: "1s"
+          left: N_width_window < 768 && !open ? "-100%" : 0,
+          position: N_width_window < 768 ? "fixed" : "sticky",
         }}
       >
         {links}

@@ -1,168 +1,150 @@
-import { useMediaQuery } from "@uidotdev/usehooks";
-import { MdOutlineStarBorder, MdStar } from "react-icons/md";
-import { Link } from "react-router-dom";
-import { useTheme } from "../../../context/ThemeContext";
+import React, { useMemo } from 'react';
+import { useMediaQuery } from '@uidotdev/usehooks';
+import { MdOutlineStarBorder, MdStar } from 'react-icons/md';
+import { Link } from 'react-router-dom';
+import { useTheme } from '../../../context/ThemeContext';
 
-const Product = ({ image, title, description, price, rating, id, latestsale, toprated, latest = false, discount = 0 }) => {
+import { useCart } from '../../../hooks/useCart';
+import logo from '../../../assets/daas-logo.svg'; // Adjust path to your logo
+
+const Product = React.memo(({ id, image, title, price, description, rating, discount = 0, latestsale = false, category, stock, latest }) => {
+    const { addToCart } = useCart();
+    const isSmallDevice = useMediaQuery('only screen and (max-width: 768px)');
     const { theme } = useTheme();
-    const filledStars = Math.floor(rating);
-    const totalStars = 5;
-    const emptyStars = totalStars - filledStars;
+    const colors = {
+        cardBackground: '#ffffff',
+        text: '#333333',
+        textSecondary: '#666666',
+        border: '#e0e0e0',
+        error: '#ff6b6b',
+        primary: '#007bff',
+        ...(theme.colors || {}),
+    };
 
-    const isSmallDevice = useMediaQuery("only screen and (max-width: 768px)");
-    const isMediumDevice = useMediaQuery("only screen and (min-width: 769px) and (max-width: 992px)");
+    const handleAddToCart = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        addToCart({
+            id,
+            image: image || logo,
+            title,
+            price,
+            quantity: 1,
+            category: category || 'Uncategorized',
+            stock: stock || 10
+        });
+    };
 
-    const discountPercentage = discount ? Math.round((discount / price) * 100) : 0;
+
+    // Memoize price calculations
+    const priceCalculations = useMemo(() => {
+        const numericPrice = Number(price) || 0;
+        return {
+            discountedPrice: discount > 0 ? numericPrice * (1 - discount / 100) : numericPrice,
+            discountPercentage: discount > 0 ? Math.round(discount) : 0,
+        };
+    }, [price, discount]);
+
+    const { discountedPrice } = priceCalculations;
 
     return (
         <Link
             to={`/product/${id}`}
             style={{
-                overflow: "hidden",
-                padding: "0 0 10px 10px",
-                borderRadius: "10px",
-                height: toprated || latestsale ? (toprated ? "450px" : "500px") : "auto",
-                display: "flex",
-                flexDirection: "column",
-                position: "relative",
-                backgroundColor: theme.colors.cardBackground || "white",
-                cursor: "pointer",
-                border: isSmallDevice || latestsale ? `1px solid ${theme.colors.border}` : "none",
-                textDecoration: "none",
-                color: theme.colors.text,
-                transition: "transform 0.3s ease, box-shadow 0.3s ease",
-                "&:hover": {
-                    transform: "translateY(-5px)",
-                    boxShadow: theme.shadows.medium,
-                }
+                padding: '0 0 10px 10px',
+                borderRadius: '12px',
+                height: '100%',
+                display: 'flex',
+                flexDirection: 'column',
+                position: 'relative',
+                backgroundColor: colors.cardBackground,
+                border: isSmallDevice || latestsale ? `1px solid ${colors.border}` : 'none',
+                textDecoration: 'none',
+                color: colors.text,
+                boxShadow: theme.isDark ? '0 4px 12px rgba(0,0,0,0.3)' : '0 2px 8px rgba(0,0,0,0.08)',
             }}
         >
-            {toprated && (
-                <span
-                    style={{
-                        position: "absolute",
-                        top: "5px",
-                        left: "5px",
-                        backgroundColor: theme.colors.info,
-                        color: theme.colors.text,
-                        borderRadius: "5px",
-                        fontSize: "13px",
-                        fontWeight: "bold",
-                        padding: "4px 13px",
-                        textTransform: "uppercase",
-                        animation: "glow 2s infinite",
-                        boxShadow: `0 0 5px ${theme.colors.info}80`,
-                        transformOrigin: "center",
-                        writingMode: "vertical-rl",
-                        height: "fit-content",
-                        width: "20px",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        textAlign: "center",
-                        lineHeight: "1",
-                    }}
-                >
-                    Top Pick
-                </span>
-            )}
 
-            {latestsale && discountPercentage > 0 && (
-                <span
+
+            {discount > 0 && (
+                <div
                     style={{
-                        position: "absolute",
-                        top: "5px",
-                        right: "5px",
-                        backgroundColor: theme.colors.error,
-                        color: theme.colors.text,
-                        padding: "4px 8px",
-                        borderRadius: "5px",
-                        fontSize: "12px",
-                        fontWeight: "bold",
-                        textTransform: "uppercase",
-                        animation: "pulse 2s infinite",
-                        boxShadow: `0 0 5px ${theme.colors.error}80`,
-                        transformOrigin: "center",
-                        zIndex: 1
+                        position: 'absolute',
+                        top: '10px',
+                        left: '10px',
+                        backgroundColor: theme.isDark ? '#ff4e50' : 'red',
+                        color: 'white',
+                        padding: '5px 10px',
+                        borderRadius: '5px',
+                        fontSize: '12px',
+                        fontWeight: 'bold',
+                        zIndex: "100"
                     }}
                 >
-                    {discountPercentage}% OFF
-                </span>
+                    SALE {discount}%
+                </div>
             )}
 
             <div
                 style={{
-                    width: latest ? (isSmallDevice ? "120px" : "160px") : "160px",
-                    height: "160px",
-                    textAlign: "start",
-                    margin: "auto",
-                    padding: "5px",
-                    borderRadius: "5px",
-                    backgroundColor: "#white"
+                    width: isSmallDevice ? '180px' : '200px',
+                    height: isSmallDevice ? '180px' : '200px',
+                    borderRadius: '10px',
+                    margin: '20px auto 0',
+                    position: 'relative',
+                    overflow: 'hidden',
+
+                    backgroundColor: theme.isDark ? '#252525' : 'transparent',
                 }}
             >
                 <img
+                    src={image || logo}
+                    alt={title || 'Product'}
                     style={{
-                        width: "100%",
-                        height: "100%",
-                        borderRadius: "10px",
+                        width: '100%',
+                        height: '100%',
+                        borderRadius: '8px',
+                        objectFit: 'contain', // Changed to 'contain' to match screenshot
+                        position: 'relative',
+                        zIndex: 2,
+                        display: "block",
+                        margin: "auto",
+                        backgroundColor: '#fff', // Add background to match screenshot
                     }}
-                    src={image}
-                    alt={title}
+                    onError={(e) => (e.target.src = logo)}
                 />
             </div>
 
             <div
                 style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    padding: "5px 10px",
-                    gap: "10px",
-                    alignItems: "start",
+                    padding: isSmallDevice ? '10px 12px' : '10px 15px',
+                    flex: 1,
+                    display: 'flex',
+                    flexDirection: 'column',
                 }}
             >
-                {latest && (
-                    <span
-                        style={{
-                            backgroundColor: theme.colors.success,
-                            color: theme.colors.text,
-                            padding: "4px 8px",
-                            borderRadius: "5px",
-                            fontSize: "12px",
-                            fontWeight: "bold",
-                            textTransform: "uppercase",
-                            animation: "slideIn 2s infinite",
-                            transformOrigin: "left",
-                        }}
-                    >
-                        New Arrival
-                    </span>
-                )}
-            </div>
-            <div style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "flex-start",
-                gap: "12px",
-                padding: "0 10px 0 0",
-                width: "100%"
-            }}>
+                <div style={{ marginBottom: isSmallDevice ? '5px' : '10px' }}>
+                    {Array.from({ length: Math.floor(rating || 0) }).map((_, i) => (
+                        <MdStar key={`filled-${i}`} color="#FFD700" size={16} />
+                    ))}
+                    {Array.from({ length: 5 - Math.floor(rating || 0) }).map((_, i) => (
+                        <MdOutlineStarBorder key={`empty-${i}`} color="#FFD700" size={16} />
+                    ))}
+                </div>
 
                 <h2
                     style={{
-                        fontSize: "16px",
-                        fontWeight: "600",
-                        color: theme.colors.text,
-                        textAlign: "left",
-                        width: "100%",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        display: "-webkit-box",
+                        fontSize: isSmallDevice ? '15px' : '16px',
+                        fontWeight: '600',
+                        color: colors.text,
+                        textAlign: 'left',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        display: '-webkit-box',
                         WebkitLineClamp: 2,
-                        WebkitBoxOrient: "vertical",
-                        lineHeight: "1.5",
+                        WebkitBoxOrient: 'vertical',
+                        lineHeight: '1.5',
                         margin: 0,
-                        opacity: 0.95
                     }}
                 >
                     {title}
@@ -170,109 +152,84 @@ const Product = ({ image, title, description, price, rating, id, latestsale, top
 
                 <p
                     style={{
-                        fontSize: "14px",
-                        color: theme.colors.textSecondary,
-                        textAlign: "left",
-                        width: "100%",
-                        margin: 0,
-                        overflow: "visible",
-                        textOverflow: "clip",
-                        display: "block",
-                        lineHeight: "1.5",
-                        opacity: 0.8
+                        fontSize: isSmallDevice ? '13px' : '14px',
+                        color: theme.isDark ? 'rgba(255,255,255,0.6)' : colors.textSecondary,
+                        textAlign: 'left',
+                        margin: '5px 0',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        display: '-webkit-box',
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: 'vertical',
+                        maxHeight: '42px',
                     }}
                 >
                     {description}
                 </p>
-            </div>
 
-            <div
-                style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    marginTop: "auto",
-                    alignItems: "start",
-                }}
-            >
-                {(toprated || latestsale) && (
-                    <p
-                        style={{
-                            fontSize: "16px",
-                            marginBottom: "10px",
-                            fontWeight: "bold",
-                            color: theme.colors.text,
-                            opacity: 0.9,
-                            textAlign: "center"
-                        }}
-                    >
-                        Price: ${price}
-                    </p>
-                )}
-
-                {(toprated || latestsale) && (
-                    <div
-                        style={{
-                            display: "flex",
-                            fontSize: "20px",
-                            marginBottom: "10px",
-                        }}
-                    >
-                        {Array.from({ length: filledStars }).map((_, index) => (
-                            <MdStar color="gold" key={index} />
-                        ))}
-                        {Array.from({ length: emptyStars }).map((_, index) => (
-                            <MdOutlineStarBorder key={index + filledStars} />
-                        ))}
+                <div
+                    style={{
+                        marginTop: isSmallDevice ? "40px" : " 30px",
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                    }}
+                >
+                    <div style={{ display: 'flex', flexDirection: 'column' }}>
+                        {discount > 0 ? (
+                            <>
+                                <span
+                                    style={{
+                                        fontSize: '12px',
+                                        textDecoration: 'line-through',
+                                        color: theme.isDark ? 'rgba(255,255,255,0.5)' : colors.textSecondary,
+                                    }}
+                                >
+                                    ${price.toFixed(2)}
+                                </span>
+                                <span
+                                    style={{
+                                        fontSize: '16px',
+                                        fontWeight: 'bold',
+                                        color: theme.isDark ? '#ff6b6b' : colors.error,
+                                    }}
+                                >
+                                    ${discountedPrice.toFixed(2)}
+                                </span>
+                            </>
+                        ) : (
+                            <span
+                                style={{
+                                    fontSize: '16px',
+                                    fontWeight: 'bold',
+                                    color: theme.isDark ? '#ff6b6b' : colors.text,
+                                }}
+                            >
+                                ${price.toFixed(2)}
+                            </span>
+                        )}
                     </div>
-                )}
 
-                {toprated && latestsale && (
-                    <Link
-                        to="/cart"
-                        onClick={(e) => e.stopPropagation()}
+                    <button
+                        onClick={handleAddToCart}
                         style={{
-                            fontSize: "15px",
-                            backgroundColor: "#FFD814",
-                            borderRadius: "20px",
-                            padding: "5px 10px",
-                            color: "black",
-                            textDecoration: "none",
-                            cursor: "pointer",
-                            width: "fit-content",
+                            fontSize: isSmallDevice ? '13px' : '15px',
+                            backgroundColor: theme.isDark ? '#ffa41c' : '#FFD814', // Yellow to match screenshot
+                            borderRadius: '20px',
+                            padding: isSmallDevice ? '4px 10px' : '5px 10px',
+                            color: 'black',
+                            cursor: 'pointer',
+                            width: 'fit-content',
+                            fontWeight: '500',
+                            border: 'none',
                         }}
                     >
                         Add to cart
-                    </Link>
-                )}
+                    </button>
+                </div>
             </div>
         </Link>
     );
-};
+});
 
 export default Product;
-
-// Inline CSS for animations
-const styles = `
-  @keyframes pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.05); box-shadow: 0 0 10px rgba(255, 0, 0, 0.7); }
-    100% { transform: scale(1); }
-  }
-  
-  @keyframes slideIn {
-    0% { opacity: 0.7; transform: translateX(-5px); }
-    50% { opacity: 1; transform: translateX(2px); }
-    100% { opacity: 0.7; transform: translateX(-5px); }
-  }
-  
-  @keyframes glow {
-    0% { opacity: 0.8; box-shadow: 0 0 5px rgba(33, 150, 243, 0.5); }
-    50% { opacity: 1; box-shadow: 0 0 10px rgba(33, 150, 243, 0.8); }
-    100% { opacity: 0.8; box-shadow: 0 0 5px rgba(33, 150, 243, 0.5); }
-  }
-`;
-
-// Add the animation styles to the document
-const styleSheet = document.createElement("style");
-styleSheet.textContent = styles;
-document.head.appendChild(styleSheet);

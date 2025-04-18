@@ -14,6 +14,7 @@ const Addproducts = () => {
     About: "",
     price: "",
     discount: "",
+    stock: ""
   });
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -34,6 +35,7 @@ const Addproducts = () => {
     About: "dummy",
     price: 121,
     discount: 1,
+    stock: 0
   };
 
   // Get All Categories
@@ -42,6 +44,7 @@ const Addproducts = () => {
       try {
         const response = await Axios.get(api_catagories);
         setCategories(response.data);
+        console.log(response.data)
       } catch (err) {
         console.error("Failed to load categories:", err);
       }
@@ -58,7 +61,18 @@ const Addproducts = () => {
 
   // Handle change form
   function handleChange(e) {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+
+    // Validation for price and stock fields
+    if (name === 'price' || name === 'stock') {
+      // Only allow positive numbers
+      if (value === '' || (/^\d*\.?\d*$/.test(value) && value >= 0)) {
+        setForm(prev => ({ ...prev, [name]: value }));
+      }
+      return;
+    }
+
+    setForm(prev => ({ ...prev, [name]: value }));
     setFirst_Sub(true);
     if (!first_Sub) {
       firstSubmit();
@@ -193,28 +207,66 @@ const Addproducts = () => {
           </Form.Select>
         </Form.Group>
 
-        {["title", "description", "About", "price", "discount"].map(
-          (field, index) => (
-            <Form.Group
-              className="mb-3"
-              controlId={`${field}Input`}
-              key={index}
-            >
-              <Form.Label>
-                {field.charAt(0).toUpperCase() + field.slice(1)}:
-              </Form.Label>
-              <Form.Control
-                type="text"
-                name={field}
-                required
-                value={form[field]}
-                onChange={handleChange}
-                placeholder={`Enter ${field}...`}
-                disabled={!first_Sub}
-              />
-            </Form.Group>
-          )
-        )}
+        {["title", "description", "About"].map((field, index) => (
+          <Form.Group className="mb-3" controlId={`${field}Input`} key={index}>
+            <Form.Label>{field.charAt(0).toUpperCase() + field.slice(1)}:</Form.Label>
+            <Form.Control
+              type="text"
+              name={field}
+              required
+              value={form[field]}
+              onChange={handleChange}
+              placeholder={`Enter ${field}...`}
+              disabled={!first_Sub}
+            />
+          </Form.Group>
+        ))}
+
+        {/* Price Field */}
+        <Form.Group className="mb-3" controlId="priceInput">
+          <Form.Label>Price:</Form.Label>
+          <Form.Control
+            type="number"
+            name="price"
+            required
+            min="0"
+            step="0.01"
+            value={form.price}
+            onChange={handleChange}
+            placeholder="Enter price..."
+            disabled={!first_Sub}
+          />
+        </Form.Group>
+
+        {/* Discount Field */}
+        <Form.Group className="mb-3" controlId="discountInput">
+          <Form.Label>Discount:</Form.Label>
+          <Form.Control
+            type="text"
+            name="discount"
+            required
+            value={form.discount}
+            onChange={handleChange}
+            placeholder="Enter discount..."
+            disabled={!first_Sub}
+          />
+        </Form.Group>
+
+        {/* Stock Field */}
+        <Form.Group className="mb-3" controlId="stockInput">
+          <Form.Label>Stock:</Form.Label>
+          <Form.Control
+            type="number"
+            name="stock"
+            required
+            min="0"
+            step="1"
+            value={form.stock}
+            onChange={handleChange}
+            placeholder="Enter stock quantity..."
+            disabled={!first_Sub}
+          />
+        </Form.Group>
 
         <Form.Group className="mb-3" controlId="imagesInput">
           <Form.Label>Images</Form.Label>
@@ -243,10 +295,7 @@ const Addproducts = () => {
               src={require("../../../images/R (1).png")}
               alt="Upload"
             />
-            <p
-              className="fw-bold"
-              style={{ color: first_Sub ? "blue" : "gray" }}
-            >
+            <p className="fw-bold" style={{ color: first_Sub ? "blue" : "gray" }}>
               Upload
             </p>
           </div>

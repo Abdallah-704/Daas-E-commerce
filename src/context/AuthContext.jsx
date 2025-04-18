@@ -1,7 +1,9 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Cookie from 'cookie-universal';
 
 const AuthContext = createContext(null);
+const cookie = Cookie();
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
@@ -9,22 +11,13 @@ export const AuthProvider = ({ children }) => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        // Check if user is logged in (e.g., check localStorage or session)
         const checkAuth = () => {
-            const storedUser = localStorage.getItem('user');
-            console.log("Checking auth, stored user:", storedUser);
-            if (storedUser) {
-                try {
-                    const parsedUser = JSON.parse(storedUser);
-                    console.log("User found in localStorage:", parsedUser);
-                    setUser(parsedUser);
-                } catch (error) {
-                    console.error("Error parsing user from localStorage:", error);
-                    // If there's an error parsing, clear the corrupted data
-                    localStorage.removeItem('user');
-                }
+            const token = cookie.get('user');
+
+            if (token) {
+                setUser(token);
             } else {
-                console.log("No user found in localStorage");
+                console.log("No token found in cookies");
             }
             setLoading(false);
         };
@@ -33,16 +26,22 @@ export const AuthProvider = ({ children }) => {
     }, []);
 
     const login = (userData) => {
-        console.log("Logging in user:", userData);
         setUser(userData);
-        localStorage.setItem('user', JSON.stringify(userData));
+        // Store user data in cookies with appropriate options
+        cookie.set('user', userData, {
+            path: '/', // Make it accessible on all paths
+            maxAge: 7 * 24 * 60 * 60, // 7 days
+            secure: true, // Only send over HTTPS
+            sameSite: 'strict' // Protect against CSRF
+        });
         navigate('/dashboard');
     };
 
     const logout = () => {
         console.log("Logging out user");
         setUser(null);
-        localStorage.removeItem('user');
+        // Remove user token cookie
+        cookie.remove('user', { path: '/' });
         navigate('/login');
     };
 
@@ -66,4 +65,4 @@ export const useAuth = () => {
         throw new Error('useAuth must be used within an AuthProvider');
     }
     return context;
-}; 
+};

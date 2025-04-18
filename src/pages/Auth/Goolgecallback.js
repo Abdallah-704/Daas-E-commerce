@@ -11,7 +11,7 @@ const Googlecallback = () => {
             try {
                 const res = await axios.get(`${api}/${api_google_back}${location.search}`);
                 const token = res.data.access_token
-                cookie.set("Bearer", token)
+                cookie.set("user", token)
                 window.location.href = "/"
             } catch (err) {
                 console.log(err);

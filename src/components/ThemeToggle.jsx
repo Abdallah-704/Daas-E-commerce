@@ -19,12 +19,13 @@ const ThemeToggle = () => {
                 backgroundColor: isDark ? '#ffffff' : '#333333',
                 color: isDark ? '#333333' : '#ffffff',
                 cursor: 'pointer',
-                display: 'flex',
+                display: 'none',
                 alignItems: 'center',
                 justifyContent: 'center',
                 boxShadow: '0 2px 10px rgba(0, 0, 0, 0.2)',
                 transition: 'all 0.3s ease',
-                zIndex: 1000
+                zIndex: 1000,
+
             }}
         >
             {isDark ? <FaSun size={24} /> : <FaMoon size={24} />}

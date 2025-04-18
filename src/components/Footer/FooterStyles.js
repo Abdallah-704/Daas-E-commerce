@@ -4,6 +4,7 @@ export const getFooterStyles = (theme, isSmallDevice, isMediumDevice) => {
         footer: {
             backgroundColor: theme.colors.cardBackground || '#1A1A1A',
             color: theme.colors.text || '#FFFFFF',
+            position:"relative",
             padding: isSmallDevice ? '2rem 1rem' : '3rem 2rem',
             borderTop: `1px solid ${theme.colors.border || 'rgba(255,255,255,0.1)'}`,
             boxShadow: `0 -5px 15px ${theme.colors.shadow || 'rgba(0,0,0,0.1)'}`,

@@ -1,140 +1,109 @@
 import styled from "styled-components";
 
-// Helper function to filter out custom props that shouldn't go to the DOM
-const shouldForwardProp = (prop) => !['isSmallDevice', 'isMediumDevice', 'isValidService'].includes(prop);
+// Helper function to filter out custom props
+const shouldForwardProp = (prop) =>
+  !["isSmallDevice", "isMediumDevice", "isValidService"].includes(prop);
 
 export const Container = styled.div.withConfig({
-  shouldForwardProp
+  shouldForwardProp,
 })`
-  margin:0 auto;
-  padding: 0 ${({ isSmallDevice, isMediumDevice }) =>
-    isSmallDevice ? "20px" : isMediumDevice ? "40px" : "60px"};
+  max-width: 100%;
+  box-sizing: border-box;
+  padding: 0 ${(props) => (props.isSmallDevice ? "10px" : "60px")};
   transition: 0.3s all;
-  a{
-    text-decoration: none;
-    color: ${props => props.theme?.colors?.text || '#333333'};
-  }
-  .nav {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 20px;
-    color: ${props => props.theme?.colors?.text || '#333333'};
+
+  .container-fluid {
+    padding-left: 0;
+    padding-right: 0;
   }
 
-  .header-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 0;
+  .row {
+    margin-left: 0;
+    margin-right: 0;
+    width: 100%;
   }
-   .search {
+
+  a {
+    text-decoration: none;
+    color: ${(props) => props.theme?.colors?.text || "#333333"};
+  }
+
+  .search {
     margin: ${({ isSmallDevice }) => (isSmallDevice ? "25px auto" : "")};
-   }
-    img {
-      object-fit: contain;
-      width: 55px;
-    }
+  }
+
+  img {
+    object-fit: contain;
+    width: 85px;
+    height: auto;
+  }
 `;
 
 export const Icons = styled.div.withConfig({
-  shouldForwardProp
+  shouldForwardProp,
 })`
   display: flex;
   gap: 15px;
-  flex:1;
   align-items: center;
   justify-content: flex-end;
-  
+
   a, div {
     margin-right: 5px;
-    color: ${props => props.theme?.colors?.text || '#333333'};
+    color: ${(props) => props.theme?.colors?.text || "#333333"};
     transition: all 0.3s ease;
     display: flex;
-    align-items: center;
+    alignItems: center;
     justify-content: center;
-    
+
     &:hover {
-      color: ${props => props.theme?.colors?.primary || '#007bff'};
-      transform: translateY(-2px);
+      color: ${(props) => props.theme?.colors?.primary || "#007bff"};
+      transform: scale(1.1);
     }
-    
+
     &[data-tooltip]:hover::after {
       content: attr(data-tooltip);
       position: absolute;
-      bottom: -25px;
+      bottom: -30px;
       left: 50%;
       transform: translateX(-50%);
-      background-color: ${props => props.theme?.colors?.cardBackground || '#ffffff'};
-      color: ${props => props.theme?.colors?.text || '#333333'};
+      background-color: ${(props) => props.theme?.colors?.cardBackground || "#ffffff"};
+      color: ${(props) => props.theme?.colors?.text || "#333333"};
       padding: 4px 8px;
       border-radius: 4px;
       font-size: 12px;
       white-space: nowrap;
-      box-shadow: 0 2px 5px ${props => props.theme?.colors?.shadow || 'rgba(0,0,0,0.2)'};
+      box-shadow: 0 2px 5px ${(props) => props.theme?.colors?.shadow || "rgba(0,0,0,0.2)"};
       z-index: 10;
     }
   }
 `;
 
-export const AuthIcon = styled.div.withConfig({
-  shouldForwardProp
-})`
-  cursor: pointer;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: ${props => props.theme?.colors?.text || '#333333'};
-  transition: all 0.3s ease;
-  
-  &:hover {
-    color: ${props => props.theme?.colors?.primary || '#007bff'};
-    transform: translateY(-2px);
-  }
-  
-  .tooltip {
-    position: absolute;
-    bottom: -25px;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: ${props => props.theme?.colors?.cardBackground || '#ffffff'};
-    color: ${props => props.theme?.colors?.text || '#333333'};
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 12px;
-    white-space: nowrap;
-    box-shadow: 0 2px 5px ${props => props.theme?.colors?.shadow || 'rgba(0,0,0,0.2)'};
-    z-index: 10;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.3s, visibility 0.3s;
-  }
-  
-  &:hover .tooltip {
-    opacity: 1;
-    visibility: visible;
-  }
-`;
-
 export const SearchContainer = styled.div.withConfig({
-  shouldForwardProp
+  shouldForwardProp,
 })`
   position: relative;
   flex: 1;
   width: 100%;
   margin-right: 20px;
   display: block;
+
   input {
     width: 100%;
     padding: 10px 15px;
-    border: 1px solid ${props => props.theme?.colors?.border || '#ccc'};
+    border: 1px solid ${(props) => props.theme?.colors?.border || "#ccc"};
     border-radius: 10px;
     outline: none;
-    background-color: ${props => props.theme?.colors?.background || '#ffffff'};
-    color: ${props => props.theme?.colors?.text || '#333333'};
+    background-color: ${(props) => props.theme?.colors?.background || "#ffffff"};
+    color: ${(props) => props.theme?.colors?.text || "#333333"};
+    transition: all 0.3s ease;
+
     &::placeholder {
-      color: ${props => props.theme?.colors?.text || '#333333'}80;
+      color: ${(props) => props.theme?.colors?.text || "#333333"}80;
+    }
+
+    &:focus {
+      border-color: ${(props) => props.theme?.colors?.primary || "#007bff"};
+      box-shadow: 0 0 5px ${(props) => props.theme?.colors?.primary || "#007bff"};
     }
   }
 
@@ -143,16 +112,19 @@ export const SearchContainer = styled.div.withConfig({
     right: 0;
     top: 50%;
     transform: translateY(-50%);
-    background-color: ${props => props.theme?.colors?.primary || '#007bff'};
+    background-color: ${(props) => props.theme?.colors?.primary || "#007bff"};
     padding: 11px 15px;
     border-radius: 0 10px 10px 0;
     cursor: pointer;
+    transition: background-color 0.3s ease;
+
     svg {
-      color: ${props => props.theme?.isDark ? '#ffffff' : '#ffffff'};
+      color: #ffffff;
       font-size: 18px;
     }
+
     &:hover {
-      background-color: ${props => props.theme?.colors?.primaryDark || '#0056b3'};
+      background-color: ${(props) => props.theme?.colors?.primaryDark || "#0056b3"};
     }
   }
 `;

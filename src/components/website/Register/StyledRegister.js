@@ -233,7 +233,7 @@ export const StyledForm = styled.div.withConfig({
     min-height: 420px;
     border-radius: 10px;
     box-shadow: 0px 4px 6px rgb(0, 0, 0, 0.3);
-    padding: 25px;
+    padding: 15px;
     z-index: 10;
     width: ${({ isSmallDevice, isMediumDevice }) =>
     isSmallDevice ? "400px" : isMediumDevice ? "500px" : "500px"};

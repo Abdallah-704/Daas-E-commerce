@@ -4,7 +4,6 @@ import { api, api_catagories } from "../../../API/Api";
 import { Container } from "../Style/Navbar";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
-import { generateFallbackCategories } from "../../../assets/fallback";
 
 // Memoized Category Item Component (Prevents Unnecessary Re-renders)
 const CategoryItem = memo(({ image, name }) => (
@@ -31,17 +30,15 @@ const Categories = () => {
                 if (response.data && response.data.length > 0) {
                     setCategories(response.data);
                 } else {
-                    // API returned empty data, use fallbacks
-                    console.log("API returned empty data, using fallbacks");
+                 
                     setUseFallback(true);
-                    setCategories(generateFallbackCategories(10));
                 }
             } catch (error) {
-                console.error("Error fetching categories:", error);
+               
                 setError("Failed to load categories. Using placeholder data instead.");
                 // Use fallback categories on error
                 setUseFallback(true);
-                setCategories(generateFallbackCategories(10));
+
             } finally {
                 setLoading(false);
             }

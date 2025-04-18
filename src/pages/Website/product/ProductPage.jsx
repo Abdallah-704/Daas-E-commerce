@@ -1,267 +1,215 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useTheme } from '../../../context/ThemeContext';
-import { useMediaQuery } from "@uidotdev/usehooks";
+import { useMediaQuery } from '@uidotdev/usehooks';
+import { useCart } from '../../../hooks/useCart';
+import { useAlert } from '../../../context/AlertContext';
 import ProductGallery from './SingleProduct/ProductGallery';
 import ProductDetails from './SingleProduct/ProductDetails';
 import ProductReviews from './SingleProduct/ProductReviews';
 import ProductSpecifications from './SingleProduct/ProductSpecifications';
-import axios from 'axios';
+import { Axios } from '../../../API/Axios';
 import Loading from '../../../components/loading/Loading';
-
-// Temporary mock data for testing
-const mockProduct = {
-    id: "1",
-    title: "Premium Wireless Headphones",
-    description: "High-quality wireless headphones with noise cancellation and premium sound quality. Perfect for music lovers and professionals.",
-    price: 199.99,
-    rating: 4.5,
-    stock: 15,
-    category: "Electronics",
-    brand: "SoundMaster",
-    discount: 20,
-    image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
-    images: [
-        "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
-        "https://images.unsplash.com/photo-1583394838336-acd977736f90?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
-        "https://images.unsplash.com/photo-1546868871-7041f2a55e12?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
-    ],
-    specifications: {
-        "General": {
-            "Brand": "SoundMaster",
-            "Model": "WH-1000XM4",
-            "Color": "Black",
-            "Weight": "250g",
-            "Dimensions": "20 x 20 x 5 cm"
-        },
-        "Technical": {
-            "Battery Life": "30 hours",
-            "Charging Time": "3 hours",
-            "Bluetooth Version": "5.0",
-            "Noise Cancellation": "Active",
-            "Water Resistance": "IPX4"
-        }
-    },
-    reviews: [
-        {
-            userName: "John Doe",
-            rating: 5,
-            comment: "Excellent sound quality and comfortable to wear for long periods.",
-            date: "2024-03-15",
-            likes: 12
-        },
-        {
-            userName: "Jane Smith",
-            rating: 4,
-            comment: "Great headphones but a bit expensive.",
-            date: "2024-03-10",
-            likes: 8
-        }
-    ]
-};
 
 const ProductPage = () => {
     const { theme } = useTheme();
     const { id } = useParams();
-    const isSmallDevice = useMediaQuery("only screen and (max-width: 768px)");
+    const { addToCart } = useCart();
+    const { showAlert } = useAlert();
+    const isSmallDevice = useMediaQuery('(max-width: 768px)');
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [reviews, setReviews] = useState([]);
+    const [productRating, setProductRating] = useState(0);
 
     useEffect(() => {
         const fetchProduct = async () => {
             try {
-                // For testing, use mock data instead of API call
-                console.log('Using mock data for testing');
-                setProduct(mockProduct);
+                setLoading(true);
+                setError(null);
 
-                // Comment out the actual API call for now
-                /*
-                console.log('Fetching product with ID:', id);
-                const response = await axios.get(`http://localhost:5000/api/products/${id}`);
-                console.log('Product data received:', response.data);
-                setProduct(response.data);
-                */
-            } catch (err) {
-                console.error('Error details:', {
-                    message: err.message,
-                    response: err.response?.data,
-                    status: err.response?.status
-                });
-                setError(err.response?.data?.message || err.message);
+                // Check if ID has 'fake-' prefix (from Fake Store API)
+                if (id.startsWith('fake-')) {
+                    // Extract the numeric part from the fake ID
+                    const fakeStoreId = id.replace('fake-', '');
+
+                    // Fetch from Fake Store API
+                    const { data } = await Axios.get(`https://fakestoreapi.com/products/${fakeStoreId}`);
+                    if (!data) throw new Error('Product not found');
+
+                    const productRating = parseFloat(data.rating?.rate) || 0;
+                    setProductRating(productRating);
+
+                    setProduct({
+                        id: `fake-${data.id}`, // Keep the fake- prefix
+                        title: data.title || 'Unnamed Product',
+                        description: data.description || 'No description',
+                        price: parseFloat(data.price) || 0,
+                        rating: productRating,
+                        stock: data.rating?.count, // Fake Store API uses rating.count for stock
+                        discount: 0, // Fake Store API doesn't have discount
+                        category: data.category || 'Uncategorized',
+                        brand: 'Unknown', // Fake Store API doesn't have brand
+                        images: data.image ? [{ image: data.image }] : [],
+                        specifications: {}, // Fake Store API doesn't have specifications
+                    });
+
+                    // Initialize with some sample reviews for fake products
+                    setReviews([
+                        {
+                            userName: 'John Doe',
+                            rating: 4,
+                            comment: 'Great product, exactly as described!',
+                            date: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
+                            likes: 5
+                        },
+                        {
+                            userName: 'Jane Smith',
+                            rating: 5,
+                            comment: 'Excellent quality and fast shipping.',
+                            date: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString(),
+                            likes: 3
+                        }
+                    ]);
+                } else {
+                    // Handle regular numeric IDs from your API
+                    const productId = parseInt(id, 10);
+                    if (isNaN(productId)) throw new Error('Invalid product ID');
+
+                    const { data } = await Axios.get(`/product/${productId}`);
+                    if (!data) throw new Error('Product not found');
+
+                    const productRating = parseFloat(data[0].rating) || 0;
+                    setProductRating(productRating);
+
+                    setProduct({
+                        id: data[0].id || productId,
+                        title: data[0].title || 'Unnamed Product',
+                        description: data[0].description || 'No description',
+                        price: parseFloat(data[0].price) || 0,
+                        rating: productRating,
+                        stock: parseInt(data[0].stock, 10) || 10,
+                        discount: parseFloat(data[0].discount) || 0,
+                        category: data[0].category || 'Uncategorized',
+                        brand: data[0].brand || 'Unknown',
+                        images: Array.isArray(data[0].images) && data[0].images.length ? data[0].images : data[0].image ? [{ image: data[0].image }] : [],
+                        specifications: data[0].specifications || {},
+                    });
+                    console.log(data[0]);
+
+                    // Initialize with empty reviews array for your API products
+                    // In a real app, you would fetch reviews from your API
+                    setReviews([]);
+                }
+            } catch (error) {
+                setError(error.message || 'Failed to load product');
             } finally {
                 setLoading(false);
             }
         };
 
-        fetchProduct();
+        if (id) fetchProduct();
     }, [id]);
 
-    const handleAddToCart = async (quantity) => {
+    const handleAddToCart = (quantity) => {
+        if (!product) return showAlert('No product available', 'error');
         try {
-            // Implement add to cart functionality
-            await axios.post('/api/cart', {
-                productId: id,
-                quantity
-            });
-            // Show success message or update cart UI
+            if (addToCart(product, quantity)) {
+                showAlert('Added to cart!', 'success');
+            } else {
+                showAlert('Failed to add to cart', 'error');
+            }
         } catch (err) {
-            console.error('Error adding to cart:', err);
-            // Show error message
+            showAlert('Failed to add to cart', 'error');
         }
     };
 
-    const handleAddReview = async (review) => {
+    const handleAddReview = (newReview) => {
         try {
-            await axios.post(`/api/products/${id}/reviews`, review);
-            // Refresh product data to show new review
-            const response = await axios.get(`/api/products/${id}`);
-            setProduct(response.data);
+            // Create a new review object with additional properties
+            const reviewToAdd = {
+                ...newReview,
+                userName: 'You', // In a real app, get this from user profile
+                date: new Date().toISOString(),
+                likes: 0
+            };
+
+            // Add the new review to the reviews array
+            const updatedReviews = [reviewToAdd, ...reviews];
+            setReviews(updatedReviews);
+
+            // Recalculate the average rating
+            const totalRating = updatedReviews.reduce((sum, review) => sum + review.rating, 0);
+            const newAverageRating = totalRating / updatedReviews.length;
+            setProductRating(newAverageRating);
+
+            showAlert('Review added successfully!', 'success');
         } catch (err) {
-            console.error('Error adding review:', err);
-            // Show error message
+            showAlert('Failed to add review', 'error');
         }
     };
+
+    const getProductImage = (product) => (product?.images?.[0]?.image || product?.image || '');
 
     if (loading) {
         return (
-            <div style={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                minHeight: '100vh',
-                backgroundColor: theme.colors.background
-            }}>
+            <div style={{ minHeight: '100vh', display: 'grid', placeItems: 'center' }}>
                 <Loading />
             </div>
         );
     }
 
-    if (error) {
+    if (error || !product) {
         return (
-            <div style={{
-                padding: "20px",
-                backgroundColor: theme.colors.background,
-                color: theme.colors.error,
-                textAlign: "center",
-                minHeight: "100vh",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-                gap: "20px"
-            }}>
-                <h2>Error loading product</h2>
-                <p>{error}</p>
-                <p>Product ID: {id}</p>
-                <button
-                    onClick={() => window.location.reload()}
-                    style={{
-                        padding: "10px 20px",
-                        backgroundColor: theme.colors.primary,
-                        color: theme.colors.text,
-                        border: "none",
-                        borderRadius: "5px",
-                        cursor: "pointer"
-                    }}
-                >
-                    Try Again
-                </button>
-            </div>
-        );
-    }
-
-    if (!product) {
-        return (
-            <div style={{
-                padding: "20px",
-                backgroundColor: theme.colors.background,
-                color: theme.colors.text,
-                textAlign: "center",
-                minHeight: "100vh",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-                gap: "20px"
-            }}>
-                <h2>Product not found</h2>
-                <p>Product ID: {id}</p>
-                <button
-                    onClick={() => window.history.back()}
-                    style={{
-                        padding: "10px 20px",
-                        backgroundColor: theme.colors.primary,
-                        color: theme.colors.text,
-                        border: "none",
-                        borderRadius: "5px",
-                        cursor: "pointer"
-                    }}
-                >
-                    Go Back
-                </button>
+            <div style={{ padding: '20px', textAlign: 'center' }}>
+                <h2>{error || 'Product not found'}</h2>
             </div>
         );
     }
 
     return (
-        <div style={{
-            padding: isSmallDevice ? "15px" : "30px",
-            backgroundColor: theme.colors.background,
-            minHeight: "100vh",
-        }}>
-            <div style={{
-                maxWidth: "1200px",
-                margin: "0 auto",
-                display: "flex",
-                flexDirection: "column",
-                gap: "30px",
-            }}>
-                <div style={{
-                    display: "grid",
-                    gridTemplateColumns: isSmallDevice ? "1fr" : "1fr 1fr",
-                    gap: "30px",
-                }}>
-                    <ProductGallery
-                        images={product.images || [product.image]}
-                        title={product.title}
-                    />
-                    <ProductDetails
-                        title={product.title}
-                        description={product.description}
-                        price={product.price}
-                        rating={product.rating}
-                        stock={product.stock}
-                        category={product.category}
-                        brand={product.brand}
-                        discount={product.discount}
-                        onAddToCart={handleAddToCart}
-                    />
-                </div>
-
-                <div style={{
-                    display: "grid",
-                    gridTemplateColumns: isSmallDevice ? "1fr" : "2fr 1fr",
-                    gap: "30px",
-                }}>
-                    <ProductReviews
-                        reviews={product.reviews || []}
-                        rating={product.rating}
-                        onAddReview={handleAddReview}
-                    />
-                    <ProductSpecifications
-                        specifications={product.specifications || {
-                            "General": {
-                                "Brand": product.brand,
-                                "Category": product.category,
-                                "Stock": product.stock
-                            }
-                        }}
-                    />
-                </div>
+        <div
+            style={{
+                padding: isSmallDevice ? '20px' : '40px',
+                background: theme.colors.background || '#fff',
+                minHeight: '100vh',
+            }}
+        >
+            <div
+                style={{
+                    display: 'grid',
+                    gridTemplateColumns: isSmallDevice ? '1fr' : '1fr 1fr',
+                    gap: '30px',
+                    marginBottom: '30px',
+                }}
+            >
+                <ProductGallery image={getProductImage(product)} title={product.title} />
+                <ProductDetails
+                    id={product.id}
+                    title={product.title}
+                    description={product.description}
+                    price={product.price}
+                    rating={product.rating}
+                    stock={product.stock || 10}
+                    discount={product.discount}
+                    category={product.category}
+                    brand={product.brand}
+                    image={getProductImage(product)}
+                    onAddToCart={handleAddToCart}
+                />
+            </div>
+            <div style={{ display: 'grid', gap: '30px' }}>
+                <ProductSpecifications specifications={product.specifications} />
+                <ProductReviews
+                    productId={product.id}
+                    reviews={reviews}
+                    rating={productRating}
+                    onAddReview={handleAddReview}
+                />
             </div>
         </div>
     );
 };
 
-export default ProductPage; 
+export default ProductPage;

@@ -11,7 +11,7 @@ export default function Requireauth({ allowedRole }) {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const token = cookie.get("Bearer");
+  const token = cookie.get("user");
 
   useEffect(() => {
     setLoading(true);
@@ -20,12 +20,18 @@ export default function Requireauth({ allowedRole }) {
       Axios.get(`/${api_user}`)
         .then((response) => {
           setUser(response.data);
+          setLoading(false);
         })
         .catch((error) => {
           console.error("Failed to fetch user data:", error);
-          navigate("/login");
-        })
-        .finally(() => {
+          // Only navigate to login if it's an authentication error (401)
+          if (error.response && error.response.status === 401) {
+            cookie.remove("user");
+            navigate("/login");
+          } else {
+            // For other errors, don't redirect but show error in console
+            console.error("API error:", error);
+          }
           setLoading(false);
         });
     } else {
@@ -39,6 +45,11 @@ export default function Requireauth({ allowedRole }) {
 
   if (!token) {
     return <Navigate to="/login" />;
+  }
+
+  // Make sure user data is loaded before checking role
+  if (!user) {
+    return <Loading />;
   }
 
   return allowedRole.includes(user.role) ? (

@@ -16,8 +16,6 @@ export const AuthProvider = ({ children }) => {
 
             if (token) {
                 setUser(token);
-            } else {
-                console.log("No token found in cookies");
             }
             setLoading(false);
         };

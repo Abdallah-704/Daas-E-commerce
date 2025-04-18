@@ -100,6 +100,9 @@ const Product = React.memo(({ id, image, title, price, description, rating, disc
                 <img
                     src={image || logo}
                     alt={title || 'Product'}
+                    width={isSmallDevice ? '180' : '200'}
+                    height={isSmallDevice ? '180' : '200'}
+                    loading="lazy"
                     style={{
                         width: '100%',
                         height: '100%',

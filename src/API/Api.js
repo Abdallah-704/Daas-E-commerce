@@ -1,4 +1,4 @@
-export const api = `http://127.0.0.1:8000/api`
+export const api = `https://back-end-for-e-commerce-production.up.railway.app//api`
 export const api_register = "register"
 export const api_login = "login"
 export const api_logout = "logout"
